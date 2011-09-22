@@ -14,6 +14,8 @@ Source2:	warsow.png
 #BuildRequires:	unzip SDL-devel openal-devel xorg-x11-devel curl-devel 
 BuildRequires:	unzip SDL-devel openal-devel curl-devel 
 BuildRequires:	libjpeg-devel
+BuildRequires:	libxinerama-devel
+BuildRequires:	libxorg-x11-devel
 Requires:	warsow-data = 0.61
 
 %description
