@@ -16,6 +16,7 @@ BuildRequires:	unzip SDL-devel openal-devel curl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libxinerama-devel
 BuildRequires:	libxorg-x11-devel
+BuildRequires:	libvorbis-devel
 Requires:	warsow-data = 0.61
 
 %description
