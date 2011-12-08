@@ -44,14 +44,14 @@ good visibility, suitable for competitive gameplay.
 %setup -q -c
 
 
-cd $RPM_BUILD_DIR/warsow-%{version}/source
+cd %{_builddir}/warsow-%{version}/source
 # From http://sources.gentoo.org/viewcvs.py/gentoo-x86/games-fps/warsow/
 #% patch0 -p0
 sed -i -e "/fs_basepath =/ s:\.:%{_datadir}/%{name}:" qcommon/files.c
 sed -i s/--as-needed// Makefile
 
 %build
-cd  $RPM_BUILD_DIR/warsow-%{version}/source
+cd  %{_builddir}/warsow-%{version}/source
 make \
 	BUILD_CLIENT=YES \
 	BUILD_SERVER=YES \
@@ -62,7 +62,7 @@ make \
 	DEBUG_BUILD=NO
 
 %install
-cd  $RPM_BUILD_DIR/warsow-%{version}/source/release
+cd  %{_builddir}/warsow-%{version}/source/release
 
 mkdir -p %{buildroot}/usr/share/{applications,pixmaps} 
 mkdir -p %{buildroot}/%{_bindir}
