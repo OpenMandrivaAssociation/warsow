@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Warsow
+Comment=Multiplayer FPS based on the QFusion engine (evolved from Quake 2)
+Icon=warsow
+Exec=warsow
+Terminal=false
+Type=Application
+Categories=Game;ArcadeGame;

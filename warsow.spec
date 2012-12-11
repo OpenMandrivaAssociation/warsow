@@ -1,25 +1,32 @@
+%define		debug_package	%nil
+
 Name:		warsow
 Summary:	A fast-paced first-person-shooter game
-Version:	0.61
-Release:	%mkrel 1
+Version:	1.02
+Release:	%mkrel 2
 License:	GPLv2
-Group:		Games/Other 
+Group:		Games/Other
 URL:		http://www.warsow.net/
-BuildRoot:	%{_tmppath}/%{name}-%{version}-build
-Source0:	warsow_%{version}_sdk.zip
-Source1:	warsow.desktop
-
-# From http://bugs.frugalware.org/task/1828
-Source2:	warsow.png
-#BuildRequires:	unzip SDL-devel openal-devel xorg-x11-devel curl-devel 
-BuildRequires:	unzip SDL-devel openal-devel curl-devel 
+Source0:	warsow_%{version}_sdk.tar.gz
+Source1:	%{name}.desktop
+Source2:	%{name}.png
+BuildRequires:	pkgconfig(sdl) 
+BuildRequires:	openal-devel 
+BuildRequires:	pkgconfig(libcurl) 
 BuildRequires:	libjpeg-devel
-BuildRequires:	libxinerama-devel
-BuildRequires:	openssl-devel
+BuildRequires:	pkgconfig(libpng)
+BuildRequires:	pkgconfig(xinerama)
+BuildRequires:	pkgconfig(openssl)
 BuildRequires:	x11-server-devel
-#BuildRequires:	libxorg-x11-devel
-BuildRequires:	libvorbis-devel
-Requires:	warsow-data = 0.61
+BuildRequires:	pkgconfig(vorbis)
+BuildRequires:	pkgconfig(xrandr)
+BuildRequires:	pkgconfig(theora)
+BuildRequires:	pkgconfig(xxf86dga)
+BuildRequires:	stdc++-devel
+BuildRequires:	stdc++-static-devel
+BuildRequires:	%{_lib}freetype6-devel
+BuildRequires:	imagemagick
+Requires:	%{name}-data = %{version}
 
 %description
 Warsow is a free standalone first person shooter game based on the Qfusion 3D
@@ -40,18 +47,41 @@ To keep the focus on competitive gaming, visibility is important in Warsow.
 Cell-shaded, cartoon-like styles on the maps, textures, and models combine for
 good visibility, suitable for competitive gameplay.
 
+%files
+%doc docs/*
+%{_bindir}/%{name}
+%{_iconsdir}/hicolor/*/apps/%{name}.png
+%{_datadir}/applications/*.desktop
+%{_libdir}/%{name}/
+
+#----------------------------------------------------------------
+
+%package server
+Group:		Games/Arcade
+Summary:	Dedicated server for TurtleArena
+Requires:	%{name}-data => %{version}
+
+%description server
+Turtle Arena (working title) is a free and open source cross-platform 
+third-person action game using a modified version of the ioquake3 engine.
+Turtle Arena is currently focused on multiplayer (with multiple game modes) 
+and can be played with human players over a network, splitscreen, or with AI 
+players. In the future there will also be a single player / cooperative reach 
+the end of the level mode with AI enemies.
+
+This package contains the dedicated server for TurtleArena.
+
+%files server
+%{_bindir}/%{name}-server
+%{_bindir}/%{name}-tv-server
+
+#----------------------------------------------------------------
+
 %prep
-%setup -q -c
-
-
-cd %{_builddir}/warsow-%{version}/source
-# From http://sources.gentoo.org/viewcvs.py/gentoo-x86/games-fps/warsow/
-#% patch0 -p0
-sed -i -e "/fs_basepath =/ s:\.:%{_datadir}/%{name}:" qcommon/files.c
-sed -i s/--as-needed// Makefile
+%setup -q -n %{name}_%{version}_sdk
 
 %build
-cd  %{_builddir}/warsow-%{version}/source
+pushd source
 make \
 	BUILD_CLIENT=YES \
 	BUILD_SERVER=YES \
@@ -59,46 +89,28 @@ make \
 	BUILD_IRC=YES \
 	BUILD_SND_OPENAL=YES \
 	BUILD_SND_QF=YES \
-	DEBUG_BUILD=NO
+	DEBUG_BUILD=NO 
+popd
 
 %install
-cd  %{_builddir}/warsow-%{version}/source/release
-
-mkdir -p %{buildroot}/usr/share/{applications,pixmaps} 
+pushd source/release
+mkdir -p %{buildroot}/%{_datadir}/applications
+mkdir -p %{buildroot}%{_iconsdir}/hicolor/{32x32,64x64,128x128,256x256}/apps
 mkdir -p %{buildroot}/%{_bindir}
-
-# Should be using libdir.
 mkdir -p %{buildroot}/%{_libdir}/%{name}
-#mkdir -p % {buildroot}/ % {_datadir}/ % {name}/libs/
 
-install -m 644 %{SOURCE2} %{buildroot}/%{_datadir}/pixmaps
+install -m 0644 %{SOURCE2} %{buildroot}%{_iconsdir}/hicolor/256x256/apps/%{name}.png
+convert -scale 128x128 %{SOURCE2}  %{buildroot}%{_iconsdir}/hicolor/128x128/apps/%{name}.png
+convert -scale 64x64 %{SOURCE2} %{buildroot}%{_iconsdir}/hicolor/64x64/apps/%{name}.png
+convert -scale 32x32 %{SOURCE2} %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
 
 install -m 755 warsow.* %{buildroot}/%{_bindir}/%{name}
 install -m 755 wsw_server.* %{buildroot}/%{_bindir}/%{name}-server
 install -m 755 wswtv_server.* %{buildroot}/%{_bindir}/%{name}-tv-server
 
-cp %SOURCE1 "%{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop"
-
+cp %SOURCE1 "%{buildroot}%{_datadir}/applications/"
 
 install -m 755 libs/irc_*.so %{buildroot}/%{_libdir}/%{name}/
 install -m 755 libs/snd_qf_*.so %{buildroot}/%{_libdir}/%{name}/
 install -m 755 libs/snd_openal_*.so %{buildroot}/%{_libdir}/%{name}/
-#install -m 755 libs/irc_*.so % {buildroot}/ % {_datadir}/ % {name}/libs/
-#install -m 755 libs/snd_qf_*.so % {buildroot}/ % {_datadir}/ % {name}/libs/
-#install -m 755 libs/snd_openal_*.so % {buildroot}/ % {_datadir}/ % {name}/libs/
-
-
-
-%clean
-rm -rf %{buildroot}
-
-%files
-%defattr(-,root,root,-)
-%doc docs/*
-%{_bindir}/%{name}
-%{_bindir}/%{name}-server
-%{_bindir}/%{name}-tv-server
-%{_datadir}/pixmaps/%{name}.png
-%{_datadir}/applications/*.desktop
-%{_libdir}/%{name}/
-# % {_datadir}/ % {name}/libs/
+popd
