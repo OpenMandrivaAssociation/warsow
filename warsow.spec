@@ -3,28 +3,30 @@
 Name:		warsow
 Summary:	A fast-paced first-person-shooter game
 Version:	1.02
-Release:	%mkrel 2
+Release:	4
 License:	GPLv2
 Group:		Games/Other
 URL:		http://www.warsow.net/
 Source0:	warsow_%{version}_sdk.tar.gz
 Source1:	%{name}.desktop
 Source2:	%{name}.png
-BuildRequires:	pkgconfig(sdl) 
-BuildRequires:	openal-devel 
-BuildRequires:	pkgconfig(libcurl) 
-BuildRequires:	libjpeg-devel
-BuildRequires:	pkgconfig(libpng)
-BuildRequires:	pkgconfig(xinerama)
-BuildRequires:	pkgconfig(openssl)
-BuildRequires:	x11-server-devel
-BuildRequires:	pkgconfig(vorbis)
-BuildRequires:	pkgconfig(xrandr)
-BuildRequires:	pkgconfig(theora)
-BuildRequires:	pkgconfig(xxf86dga)
+BuildRequires:	jpeg-devel
 BuildRequires:	stdc++-devel
 BuildRequires:	stdc++-static-devel
-BuildRequires:	%{_lib}freetype6-devel
+BuildRequires:	pkgconfig(freetype2)
+BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(libcurl)
+BuildRequires:	pkgconfig(libpng)
+BuildRequires:	pkgconfig(openal)
+BuildRequires:	pkgconfig(openssl)
+BuildRequires:	pkgconfig(sdl)
+BuildRequires:	pkgconfig(theora)
+BuildRequires:	pkgconfig(vorbis)
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(xinerama)
+BuildRequires:	pkgconfig(xrandr)
+BuildRequires:	pkgconfig(xxf86dga)
+BuildRequires:	pkgconfig(xxf86vm)
 BuildRequires:	imagemagick
 Requires:	%{name}-data = %{version}
 
@@ -49,10 +51,10 @@ good visibility, suitable for competitive gameplay.
 
 %files
 %doc docs/*
-%{_bindir}/%{name}
+%{_gamesbindir}/%{name}
 %{_iconsdir}/hicolor/*/apps/%{name}.png
 %{_datadir}/applications/*.desktop
-%{_libdir}/%{name}/
+%{_libdir}/games/%{name}/libs
 
 #----------------------------------------------------------------
 
@@ -72,45 +74,45 @@ the end of the level mode with AI enemies.
 This package contains the dedicated server for TurtleArena.
 
 %files server
-%{_bindir}/%{name}-server
-%{_bindir}/%{name}-tv-server
+%{_gamesbindir}/%{name}-server
+%{_gamesbindir}/%{name}-tv-server
 
 #----------------------------------------------------------------
 
 %prep
 %setup -q -n %{name}_%{version}_sdk
+sed -i -e "/fs_basepath =/ s:\.:%{_libdir}/games/%{name}:" source/qcommon/files.c
 
 %build
 pushd source
 make \
+	BUILD_ANGELWRAP=YES \
 	BUILD_CLIENT=YES \
 	BUILD_SERVER=YES \
 	BUILD_TV_SERVER=YES \
 	BUILD_IRC=YES \
 	BUILD_SND_OPENAL=YES \
-	BUILD_SND_QF=YES \
-	DEBUG_BUILD=NO 
+	BUILD_SND_QF=NO \
+	DEBUG_BUILD=NO
 popd
 
 %install
 pushd source/release
-mkdir -p %{buildroot}/%{_datadir}/applications
+mkdir -p %{buildroot}%{_datadir}/applications
 mkdir -p %{buildroot}%{_iconsdir}/hicolor/{32x32,64x64,128x128,256x256}/apps
-mkdir -p %{buildroot}/%{_bindir}
-mkdir -p %{buildroot}/%{_libdir}/%{name}
+mkdir -p %{buildroot}%{_gamesbindir}
+mkdir -p %{buildroot}%{_libdir}/games/%{name}/libs
 
 install -m 0644 %{SOURCE2} %{buildroot}%{_iconsdir}/hicolor/256x256/apps/%{name}.png
-convert -scale 128x128 %{SOURCE2}  %{buildroot}%{_iconsdir}/hicolor/128x128/apps/%{name}.png
+convert -scale 128x128 %{SOURCE2} %{buildroot}%{_iconsdir}/hicolor/128x128/apps/%{name}.png
 convert -scale 64x64 %{SOURCE2} %{buildroot}%{_iconsdir}/hicolor/64x64/apps/%{name}.png
 convert -scale 32x32 %{SOURCE2} %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
 
-install -m 755 warsow.* %{buildroot}/%{_bindir}/%{name}
-install -m 755 wsw_server.* %{buildroot}/%{_bindir}/%{name}-server
-install -m 755 wswtv_server.* %{buildroot}/%{_bindir}/%{name}-tv-server
+install -m 755 warsow.* %{buildroot}%{_gamesbindir}/%{name}
+install -m 755 wsw_server.* %{buildroot}%{_gamesbindir}/%{name}-server
+install -m 755 wswtv_server.* %{buildroot}%{_gamesbindir}/%{name}-tv-server
 
-cp %SOURCE1 "%{buildroot}%{_datadir}/applications/"
+cp %{SOURCE1} %{buildroot}%{_datadir}/applications/
 
-install -m 755 libs/irc_*.so %{buildroot}/%{_libdir}/%{name}/
-install -m 755 libs/snd_qf_*.so %{buildroot}/%{_libdir}/%{name}/
-install -m 755 libs/snd_openal_*.so %{buildroot}/%{_libdir}/%{name}/
+install -m 755 libs/*.so %{buildroot}%{_libdir}/games/%{name}/libs/
 popd
