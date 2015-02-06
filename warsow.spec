@@ -3,7 +3,7 @@
 Name:		warsow
 Summary:	A fast-paced first-person-shooter game
 Version:	1.02
-Release:	4
+Release:	5
 License:	GPLv2
 Group:		Games/Other
 URL:		http://www.warsow.net/
