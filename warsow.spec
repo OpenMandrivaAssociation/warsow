@@ -89,6 +89,8 @@ This package contains the dedicated server for TurtleArena.
 sed -i -e "/fs_basepath =/ s:\.:%{_libdir}/games/%{name}:" source/source/qcommon/files.c
 
 %build
+export CC=gcc
+export CXX=g++
 pushd source/source
 mkdir -p cmake_build
 cd cmake_build 
