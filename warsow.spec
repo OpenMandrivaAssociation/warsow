@@ -2,6 +2,9 @@
 
 %define _disable_lto 1
 
+# Workaround duplicate symbols
+%global optflags %{optflags} -fcommon
+
 Name:		warsow
 Summary:	A fast-paced first-person-shooter game
 Version:	2.1.2
@@ -12,6 +15,9 @@ URL:		http://www.warsow.net/
 Source0:	https://warsow.net/warsow_21_sdk.tar.gz
 Source1:	%{name}.desktop
 Source2:	%{name}.png
+
+# From ALT Linux
+Patch0:   https://packages.altlinux.org/en/sisyphus/srpms/warsow/patches/warsow-alt-fno-common.patch
 
 BuildRequires:	jpeg-devel
 BuildRequires:	stdc++-devel
@@ -85,15 +91,12 @@ This package contains the dedicated server for TurtleArena.
 
 %prep
 %setup -q -n warsow_21_sdk
+%autopatch -p1
 sed -i -e "/fs_basepath =/ s:\.:%{_libdir}/games/%{name}:" source/source/qcommon/files.c
 
 %build
-
-# Workaround duplicate symbols
-%global optflags %{optflags} -fcommon
-
-export CC=gcc
-export CXX=g++
+#export CC=gcc
+#export CXX=g++
 pushd source/source
 mkdir -p cmake_build
 cd cmake_build 
