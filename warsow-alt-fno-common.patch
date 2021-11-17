@@ -1,0 +1,39 @@
+diff --git a/warsow_21_sdk/source/qcommon/cmodel.h b/warsow_21_sdk/source/qcommon/cmodel.h
+index 0ff80095..e2fd2e06 100755
+--- a/warsow_21_sdk/source/qcommon/cmodel.h
++++ b/warsow_21_sdk/source/qcommon/cmodel.h
+@@ -23,7 +23,7 @@ typedef struct cmodel_state_s cmodel_state_t;
+ extern cvar_t *cm_noCurves;
+ 
+ // debug/performance counter vars
+-int c_pointcontents, c_traces, c_brush_traces;
++extern int c_pointcontents, c_traces, c_brush_traces;
+ 
+ struct cmodel_s *CM_LoadMap( cmodel_state_t *cms, const char *name, bool clientload, unsigned *checksum );
+ struct cmodel_s *CM_InlineModel( cmodel_state_t *cms, int num ); // 1, 2, etc
+diff --git a/warsow_21_sdk/source/qcommon/common.c b/warsow_21_sdk/source/qcommon/common.c
+index a3ea7f25..4570b603 100755
+--- a/warsow_21_sdk/source/qcommon/common.c
++++ b/warsow_21_sdk/source/qcommon/common.c
+@@ -43,6 +43,8 @@ static bool com_quit;
+ 
+ static jmp_buf abortframe;     // an ERR_DROP occured, exit the entire frame
+ 
++int c_pointcontents, c_traces, c_brush_traces;
++
+ cvar_t *host_speeds;
+ cvar_t *developer;
+ cvar_t *timescale;
+diff --git a/warsow_21_sdk/source/tv_server/tv_module/tvm_main.c b/warsow_21_sdk/source/tv_server/tv_module/tvm_main.c
+index d1511340..d2aaf586 100755
+--- a/warsow_21_sdk/source/tv_server/tv_module/tvm_main.c
++++ b/warsow_21_sdk/source/tv_server/tv_module/tvm_main.c
+@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ 
+ tv_module_locals_t tvm;
+ 
+-cvar_t *developer;
++extern cvar_t *developer;
+ cvar_t *tv_chasemode;
+ 
+ //======================================================================
