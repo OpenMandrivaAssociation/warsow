@@ -2,14 +2,15 @@
 
 Name:		warsow
 Summary:	A fast-paced first-person-shooter game
-Version:	1.02
-Release:	5
+Version:	2.1.2
+Release:	1
 License:	GPLv2
 Group:		Games/Other
 URL:		http://www.warsow.net/
-Source0:	warsow_%{version}_sdk.tar.gz
+Source0:	https://warsow.net/warsow_21_sdk.tar.gz
 Source1:	%{name}.desktop
 Source2:	%{name}.png
+
 BuildRequires:	jpeg-devel
 BuildRequires:	stdc++-devel
 BuildRequires:	stdc++-static-devel
@@ -19,7 +20,7 @@ BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(openal)
 BuildRequires:	pkgconfig(openssl)
-BuildRequires:	pkgconfig(sdl)
+BuildRequires:	pkgconfig(sdl2)
 BuildRequires:	pkgconfig(theora)
 BuildRequires:	pkgconfig(vorbis)
 BuildRequires:	pkgconfig(x11)
@@ -27,6 +28,7 @@ BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xrandr)
 BuildRequires:	pkgconfig(xxf86dga)
 BuildRequires:	pkgconfig(xxf86vm)
+BuildRequires:	pkgconfig(xi)
 BuildRequires:	imagemagick
 Requires:	%{name}-data = %{version}
 
@@ -80,24 +82,19 @@ This package contains the dedicated server for TurtleArena.
 #----------------------------------------------------------------
 
 %prep
-%setup -q -n %{name}_%{version}_sdk
-sed -i -e "/fs_basepath =/ s:\.:%{_libdir}/games/%{name}:" source/qcommon/files.c
+%setup -q -n warsow_21_sdk
+sed -i -e "/fs_basepath =/ s:\.:%{_libdir}/games/%{name}:" warsow_21_sdk/source/source/qcommon/files.c
 
 %build
-pushd source
-make \
-	BUILD_ANGELWRAP=YES \
-	BUILD_CLIENT=YES \
-	BUILD_SERVER=YES \
-	BUILD_TV_SERVER=YES \
-	BUILD_IRC=YES \
-	BUILD_SND_OPENAL=YES \
-	BUILD_SND_QF=NO \
-	DEBUG_BUILD=NO
+pushd warsow_21_sdk/source/source
+mkdir -p cmake_build
+cd cmake_build 
+cmake -DQFUSION_GAME=Warsow .. 
+make
 popd
 
 %install
-pushd source/release
+pushd warsow_21_sdk/source/source/build
 mkdir -p %{buildroot}%{_datadir}/applications
 mkdir -p %{buildroot}%{_iconsdir}/hicolor/{32x32,64x64,128x128,256x256}/apps
 mkdir -p %{buildroot}%{_gamesbindir}
