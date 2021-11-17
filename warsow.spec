@@ -1,5 +1,8 @@
 %define		debug_package	%nil
 
+# Workaround duplicate symbols
+%global optflags %{optflags} -fcommon
+
 Name:		warsow
 Summary:	A fast-paced first-person-shooter game
 Version:	2.1.2
