@@ -86,7 +86,7 @@ This package contains the dedicated server for TurtleArena.
 sed -i -e "/fs_basepath =/ s:\.:%{_libdir}/games/%{name}:" source/source/qcommon/files.c
 
 %build
-pushd warsow_21_sdk/source/source
+pushd source/source
 mkdir -p cmake_build
 cd cmake_build 
 cmake -DQFUSION_GAME=Warsow .. 
