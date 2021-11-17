@@ -105,7 +105,7 @@ make
 popd
 
 %install
-pushd warsow_21_sdk/source/source/build
+pushd source/source/build
 mkdir -p %{buildroot}%{_datadir}/applications
 mkdir -p %{buildroot}%{_iconsdir}/hicolor/{32x32,64x64,128x128,256x256}/apps
 mkdir -p %{buildroot}%{_gamesbindir}
