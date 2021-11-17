@@ -1,7 +1,6 @@
 %define		debug_package	%nil
 
-# Workaround duplicate symbols
-%global optflags %{optflags} -fcommon
+%define _disable_lto 1
 
 Name:		warsow
 Summary:	A fast-paced first-person-shooter game
@@ -89,6 +88,10 @@ This package contains the dedicated server for TurtleArena.
 sed -i -e "/fs_basepath =/ s:\.:%{_libdir}/games/%{name}:" source/source/qcommon/files.c
 
 %build
+
+# Workaround duplicate symbols
+%global optflags %{optflags} -fcommon
+
 export CC=gcc
 export CXX=g++
 pushd source/source
