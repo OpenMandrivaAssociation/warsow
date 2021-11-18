@@ -1,0 +1,36 @@
+diff -uraN warsow_21_sdk/source/source/qcommon/cmodel.h omv-warsow_21_sdk/source/source/qcommon/cmodel.h
+--- warsow_21_sdk/source/source/qcommon/cmodel.h	2016-03-26 20:22:10.000000000 +0100
++++ omv-warsow_21_sdk/source/source/qcommon/cmodel.h	2021-11-17 16:21:06.411795769 +0100
+@@ -23,7 +23,7 @@
+ extern cvar_t *cm_noCurves;
+ 
+ // debug/performance counter vars
+-int c_pointcontents, c_traces, c_brush_traces;
++extern int c_pointcontents, c_traces, c_brush_traces;
+ 
+ struct cmodel_s *CM_LoadMap( cmodel_state_t *cms, const char *name, bool clientload, unsigned *checksum );
+ struct cmodel_s *CM_InlineModel( cmodel_state_t *cms, int num ); // 1, 2, etc
+diff -uraN warsow_21_sdk/source/source/qcommon/common.c omv-warsow_21_sdk/source/source/qcommon/common.c
+--- warsow_21_sdk/source/source/qcommon/common.c	2016-03-26 20:22:10.000000000 +0100
++++ omv-warsow_21_sdk/source/source/qcommon/common.c	2021-11-17 16:21:49.660844894 +0100
+@@ -43,6 +43,8 @@
+ 
+ static jmp_buf abortframe;     // an ERR_DROP occured, exit the entire frame
+ 
++int c_pointcontents, c_traces, c_brush_traces;
++
+ cvar_t *host_speeds;
+ cvar_t *developer;
+ cvar_t *timescale;
+diff -uraN warsow_21_sdk/source/source/tv_server/tv_module/tvm_main.c omv-warsow_21_sdk/source/source/tv_server/tv_module/tvm_main.c
+--- warsow_21_sdk/source/source/tv_server/tv_module/tvm_main.c	2016-03-26 20:22:10.000000000 +0100
++++ omv-warsow_21_sdk/source/source/tv_server/tv_module/tvm_main.c	2021-11-17 16:22:43.459309056 +0100
+@@ -26,7 +26,7 @@
+ 
+ tv_module_locals_t tvm;
+ 
+-cvar_t *developer;
++extern cvar_t *developer;
+ cvar_t *tv_chasemode;
+ 
+ //======================================================================
