@@ -11,7 +11,7 @@ Version:	2.1.2
 Release:	1
 License:	GPLv2
 Group:		Games/Other
-URL:		http://www.warsow.net/
+URL:		https://www.warsow.net/
 Source0:	https://warsow.net/warsow_21_sdk.tar.gz
 Source1:	%{name}.desktop
 Source2:	%{name}.png
