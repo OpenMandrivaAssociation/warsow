@@ -19,6 +19,7 @@ Source2:	%{name}.png
 # From ALT Linux
 Patch0:   https://packages.altlinux.org/en/sisyphus/srpms/warsow/patches/warsow-alt-fno-common.patch
 
+BuildRequires:	make
 BuildRequires:	jpeg-devel
 BuildRequires:	stdc++-devel
 BuildRequires:	stdc++-static-devel
